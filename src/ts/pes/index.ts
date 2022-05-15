@@ -17,15 +17,16 @@ function get_pes_head_len (pes: Uint8Array, len: number) {
   return pes_head_len;
 }
 
-export function lts_pes_parse_header (pes: Uint8Array, len: number, stream_id: number | null, handle: TDemux) {
+export function lts_pes_parse_header (pes: Uint8Array, len: number, handle: TDemux) {
   let pes_head_len = get_pes_head_len(pes, len);
   if (pes_head_len <= 0) {
     return 0;
   }
 
-  if (stream_id) {
-    //
+  if (handle) {
+    handle.pes_stream_id = pes[3];
   }
+
   // 解析PTS
   if (handle) {
     let flags_2 = pes[7];
@@ -38,7 +39,7 @@ export function lts_pes_parse_header (pes: Uint8Array, len: number, stream_id: n
       handle.pts |= (pts_buf[4] >> 1 & 0xFE);
       // handle.pts /= 90;
     } else if (flags_2 & 0xc0) {
-      console.log('flags_2:', pes[7]);
+      console.log('非视频流flags_2:', pes[7]);
     }
   }
 

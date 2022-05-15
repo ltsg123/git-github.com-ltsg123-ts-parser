@@ -41,6 +41,7 @@ interface TDemux {
   es_ptr: number | null;		// ES数据首地址
   es_len: number;				// ES数据长度
   pes_head_len: number;		// PES头部长度
+  pes_stream_id: number;   // pes码流类型 ---- xsm+++
   sync_only: number;			// 只同步包，不解析包
   ps_started: number;			// 已找到PS头部
 };

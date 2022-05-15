@@ -15,6 +15,7 @@ export function handle_ts_pack (handle: TDemux, data: Uint8Array) {
   if (!handle.info) {
     handle.info = {} as TsProgramInfo;
   }
+  // console.log('pid', pid);
 
   // 如果是PAT表，则更新handle
   // 不支持过长的PAT或PMT表
@@ -165,7 +166,7 @@ function get_ts_es (tsPacket: TsPacket, handle: TDemux) {
 
   // 计算PES包头长度
   if (!handle.pes_head_len || handle.pes_head_len <= 0) {
-    handle.pes_head_len = lts_pes_parse_header(tsPacket.data.subarray(payload_offset), payload_len, null, handle);
+    handle.pes_head_len = lts_pes_parse_header(tsPacket.data.subarray(payload_offset), payload_len, handle);
   }
 
   // 去除PES包头
@@ -173,7 +174,7 @@ function get_ts_es (tsPacket: TsPacket, handle: TDemux) {
     if (handle.pes_head_len <= payload_len) {
       handle.es_ptr = payload_offset + handle.pes_head_len;
       handle.es_len = payload_len - handle.pes_head_len;
-      outputEs(tsPacket.data.subarray(handle.es_ptr, handle.es_ptr + handle.es_len), handle.es_ptr, handle.es_len, tsPacket.data.subarray(payload_offset)[3], handle.pts);
+      outputEs(tsPacket.data.subarray(handle.es_ptr, handle.es_ptr + handle.es_len), handle.es_ptr, handle.es_len, handle.pes_stream_id, handle.pts);
       handle.pes_head_len = 0;
     }
     else {
@@ -185,10 +186,11 @@ function get_ts_es (tsPacket: TsPacket, handle: TDemux) {
   else {
     handle.es_ptr = payload_offset;
     handle.es_len = payload_len;
-    outputEs(tsPacket.data.subarray(handle.es_ptr, handle.es_ptr + handle.es_len), handle.es_ptr, handle.es_len, tsPacket.data.subarray(payload_offset)[3], handle.pts);
+    outputEs(tsPacket.data.subarray(handle.es_ptr, handle.es_ptr + handle.es_len), handle.es_ptr, handle.es_len, handle.pes_stream_id, handle.pts);
   }
 }
 
+let demuxIndex = 0;
 export function lts_ts_demux (handle: TDemux, ts_buf: Uint8Array, len: number) {
   let ret = 0;
   let i;
@@ -202,17 +204,26 @@ export function lts_ts_demux (handle: TDemux, ts_buf: Uint8Array, len: number) {
   handle.pack_len = 0;
 
   // 只解出最开头一包
-  for (i = 0; i < len; i++) {
+  for (i = 0; i < len; i += 188) {
     if (ts_buf[i] == 0x47) {
       if (len >= 188) {
         handle.pack_ptr = i;
         handle.pack_len = 188;
         if (!handle.sync_only) {
+          demuxIndex++;
+          // console.log('ret---------------', ret);
           handle_ts_pack(handle, ts_buf.subarray(i));
+          if (demuxIndex === 268) {
+            // if (demuxIndex > 250 && demuxIndex < 300) {
+            console.log('demux前的分片index是：', demuxIndex);
+            return;
+          }
         }
         ret = i + 188;
         continue;
       }
+    } else {
+      console.log('err')
     }
   }
 

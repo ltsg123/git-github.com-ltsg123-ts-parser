@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@types/file-saver@^2.0.5":
+  version "2.0.5"
+  resolved "https://kfront-dev-dev.devdolphin.com/ty-knpm/@types%2ffile-saver/-/file-saver-2.0.5.tgz#9ee342a5d1314bb0928375424a2f162f97c310c7"
+  integrity sha512-zv9kNf3keYegP5oThGLaPk8E081DFDuwfqjtiTzm6PoxChdJ1raSuADf2YGCVIyrSynLrgc8JWv296s7Q7pQSQ==
+
 "@types/glob@^7.1.1":
   version "7.2.0"
   resolved "https://kfront-dev-dev.devdolphin.com/ty-knpm/@types%2fglob/-/glob-7.2.0.tgz#bc1b5bf3aa92f25bd5dd39f35c57361bdce5b2eb"
@@ -1494,6 +1499,11 @@ figgy-pudding@^3.5.1:
   version "3.5.2"
   resolved "https://kfront-dev-dev.devdolphin.com/ty-knpm/figgy-pudding/-/figgy-pudding-3.5.2.tgz#b4eee8148abb01dcf1d1ac34367d59e12fa61d6e"
   integrity sha1-tO7oFIq7Adzx0aw0Nn1Z4S+mHW4=
+
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://kfront-dev-dev.devdolphin.com/ty-knpm/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha1-1hz+LOBZ9BTYmendbUEH7iVnDDg=
 
 file-uri-to-path@1.0.0:
   version "1.0.0"

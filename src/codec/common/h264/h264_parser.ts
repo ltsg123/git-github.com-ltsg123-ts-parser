@@ -28,6 +28,7 @@ export default class _H264Parser {
   public onUpdate?: (sample: IH264Sample) => void;
 
   public recvRTP (data: Uint8Array, pts: number) {
+    console.log('rec', data);
     this._priv_naluFactory.inputNalu(data, pts);
   }
 
